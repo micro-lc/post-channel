@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head><title>IFRAME</title></head>
+  <body>
+    <script async type="module">
+      import {createPostChannel, adapters} from "/src/index.ts"
+      const {from, to} = adapters.fromChild(window)
+      const ch = await createPostChannel(() => {}, { from, to, instance: 'iframe', log: console.log })
+      ch.send({ type: 'msg', content: {aaa:'hello from iframe'} })
+    </script>
+  </body>
+</html>
