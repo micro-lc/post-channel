@@ -11,6 +11,7 @@ on:
     branches:
       - main
     paths:
+      - 'yarn.lock'
       - '.github/workflows/**'
       - './package.json'
       - 'src/**'
