@@ -1,4 +1,5 @@
-import test from "@playwright/test";
+import test from '@playwright/test'
+
 import type * as PostChannel from '../src/index'
 
 declare global {
@@ -10,12 +11,12 @@ declare global {
 const IFRAME_INSTANCE = 'iframe'
 const WINDOW_INSTANCE = 'main'
 
-test('window and child iframe should exchange messages after successful syn/ack', async ({page}) => {
-  await page.goto("http://localhost:5173")
+test('window and child iframe should exchange messages after successful syn/ack', async ({ page }) => {
+  await page.goto('http://localhost:5173')
 
   // mounts an iframe which attempts to connect to
   // the parent window
-  await page.evaluate(async (iframeInstance) => {
+  await page.evaluate((iframeInstance) => {
     const iframe = document.createElement('iframe')
     iframe.srcdoc = `
       <!DOCTYPE html>
@@ -42,17 +43,19 @@ test('window and child iframe should exchange messages after successful syn/ack'
     const done = new Promise<void>((resolve) => {
       promiseResolve = resolve
     })
-    const listener = (msg: unknown) => {
-      console.log(msg)
+    const listener = () => {
       promiseResolve()
     }
-    const {PostChannel: {createPostChannel, adapters}} = window
+    const { PostChannel: { createPostChannel, adapters } } = window
     const iframe = document.querySelector('iframe') as HTMLIFrameElement
-    const {from, to} = adapters.fromParent(iframe)
-    const postChannel = await createPostChannel(listener, {from, to, instance: windowInstance, log: console.log})
+    const { from, to } = adapters.fromParent(iframe)
+    const postChannel = await createPostChannel(listener, { from, instance: windowInstance, to })
 
     await done
 
-    await postChannel.ackSend({ type: 'hello' })
+    await postChannel.ackSend({
+      content: undefined,
+      type: 'hello',
+    })
   }, WINDOW_INSTANCE)
 })

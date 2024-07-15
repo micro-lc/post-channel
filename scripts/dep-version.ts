@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { readFile } from 'fs/promises'
 import { createRequire } from 'module'
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import esbuild from 'esbuild'
 
 const opts = {
@@ -20,8 +21,8 @@ const opts = {
       '*/',
     ].join('\n'),
   },
-  entryPoints: ['src/index.ts'],
   bundle: true,
+  entryPoints: ['src/index.ts'],
   external: ['crypto'],
 }
 
