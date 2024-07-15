@@ -153,7 +153,7 @@ async function main() {
   const queue = new PromiseQueue()
 
   const workingDir = pathResolve(process.cwd())
-  const tagScope = '@mia-platform-internal/fast-data-secret-js'
+  const tagScope = '@micro-lc/post-channel'
   const tagPrefix = 'v'
 
   await queue.add('version', () => exec('version', `(cd ${workingDir} ; yarn version ${ctx.version})`))
