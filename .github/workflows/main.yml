@@ -1,0 +1,34 @@
+name: Main
+
+env:
+  context: './'
+  cache-name: cache-release
+  node-version: 20.x
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/**'
+      - './package.json'
+      - 'src/**'
+      - 'tests/**'
+
+jobs:
+  build:
+    uses: micro-lc/post-channel/.github/workflows/build.yml@main
+
+  checks:
+    needs:
+      - build
+    uses: micro-lc/post-channel/.github/workflows/checks.yml@main
+
+  unit-tests:
+    needs:
+      - build
+    uses: micro-lc/post-channel/.github/workflows/unit-tests.yml@main
+
+  e2e-tests:
+    uses: micro-lc/post-channel/.github/workflows/e2e-tests.yml@main

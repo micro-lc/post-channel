@@ -1,0 +1,16 @@
+{
+  "all": true,
+  "src": ["src"],
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    ".yarn/*",
+    "node_modules",
+    "src/**/*.d.ts"
+  ],
+  "reporter": [
+    "text",
+    "cobertura"
+  ]
+}

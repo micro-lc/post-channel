@@ -1,0 +1,42 @@
+name: Unit Tests
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        default: 20.x
+        required: false
+        type: string
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: yarn
+      
+      - name: Build Cache
+        uses: actions/cache@v4
+        id: build-cache
+        with:
+          path: |
+            ./node_modules
+            ./dist
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Run unit tests
+        run: yarn coverage
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: coverage/cobertura-coverage.xml
