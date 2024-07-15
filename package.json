@@ -22,6 +22,7 @@
     "test:e2e": "yarn playwright test",
     "coverage": "c8 mocha \"src/**/*.test.ts\"",
     "check:types": "tsc --noEmit",
+    "dep-version": "node --no-warnings --loader=ts-node/esm ./scripts/dep-version.ts",
     "build:lib": "node --no-warnings --loader=ts-node/esm scripts/build.ts",
     "build:types": "tsc --project scripts/tsconfig.json",
     "build": "run-p 'build:lib' 'build:types'",
