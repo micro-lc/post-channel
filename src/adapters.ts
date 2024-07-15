@@ -81,12 +81,10 @@ const fromWindowToReceiver = <T extends Message = Message>(self: WindowPostMessa
 }
 
 const adapters = {
-  fromServiceWorkerToReceiver,
-  fromWindowToReceiver,
   fromChild(window: Window) {
     return {
       from: window,
-      to: fromWindowToReceiver(window.parent)
+      to: fromWindowToReceiver(window.parent),
     }
   },
   fromParent(iframe: HTMLIFrameElement) {
@@ -94,14 +92,16 @@ const adapters = {
       if (iframe.ownerDocument.defaultView) {
         return {
           from: iframe.ownerDocument.defaultView,
-          to: fromWindowToReceiver(iframe.contentWindow)
+          to: fromWindowToReceiver(iframe.contentWindow),
         }
       }
       throw new TypeError('iframe ownerDocument.defaultView is null')
     }
     throw new TypeError('iframe contentWindow is null')
-  }
+  },
+  fromServiceWorkerToReceiver,
+  fromWindowToReceiver,
 }
 
-export type {Receiver, Message, MessageToSend, UserMessage, SynAckMessage}
-export {adapters, SynAck, Msg}
+export type { Receiver, Message, MessageToSend, UserMessage, SynAckMessage }
+export { adapters, SynAck, Msg }

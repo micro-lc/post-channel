@@ -1,6 +1,9 @@
 import { test } from 'mocha'
-import { Listener, MessageToSend, createPostChannel, Receiver, Sender, adapters } from '..'
 import { ReplaySubject } from 'rxjs'
+
+import type { Listener, MessageToSend, Receiver, Sender } from '..'
+import { createPostChannel } from '..'
+
 
 test('both ends of the post channel should exchange a message after successful syn/ack', async () => {
   let resolveWindow: () => void
@@ -11,14 +14,10 @@ test('both ends of the post channel should exchange a message after successful s
   const doneWorker = new Promise<void>((resolve) => {
     resolveWorker = resolve
   })
-  const listenerWindow: Listener<MessageToSend> = function (this, message) {
-    const { instance } = this
-    // console.debug(`${instance} received: ${JSON.stringify(message)}`)
+  const listenerWindow: Listener<MessageToSend> = () => {
     resolveWindow()
   }
-  const listenerWorker: Listener<MessageToSend> = function (this, message) {
-    const { instance } = this
-    // console.debug(`${instance} received: ${JSON.stringify(message)}`)
+  const listenerWorker: Listener<MessageToSend> = () => {
     resolveWorker()
   }
 
@@ -30,31 +29,31 @@ test('both ends of the post channel should exchange a message after successful s
     addEventListener: (_, listener) => {
       windowBuffer.asObservable().subscribe((msg) => listener(new MessageEvent('message', { data: msg })))
     },
-    removeEventListener: () => { },
+    removeEventListener: () => { /* no-op */ },
   }
   // handler to send to worker
   const postToWorker: Receiver = {
-    postMessage: (message) => workerBuffer.next(message)
+    postMessage: (message) => workerBuffer.next(message),
   }
 
   const workerListener: Sender = {
     addEventListener: (_, listener) => {
       workerBuffer.asObservable().subscribe((msg) => listener(new MessageEvent('message', { data: msg })))
     },
-    removeEventListener: () => { },
+    removeEventListener: () => { /* no-op */ },
   }
   // handler to send to window
   const postToWindow: Receiver = {
-    postMessage: (message) => windowBuffer.next(message)
+    postMessage: (message) => windowBuffer.next(message),
   }
 
   const [windowChannel, workerChannel] = await Promise.all([
-    createPostChannel(listenerWindow, { from: windowListener, to: postToWorker, instance: 'mainThread' }),
-    createPostChannel(listenerWorker, { from: workerListener, to: postToWindow, instance: 'worker' })
+    createPostChannel(listenerWindow, { from: windowListener, instance: 'mainThread', to: postToWorker }),
+    createPostChannel(listenerWorker, { from: workerListener, instance: 'worker', to: postToWindow }),
   ])
 
-  workerChannel.send({ type: 'hello from worker', content: {} })
-  windowChannel.send({ type: 'hello from window', content: {} })
+  workerChannel.send({ content: {}, type: 'hello from worker' })
+  windowChannel.send({ content: {}, type: 'hello from window' })
 
   return Promise.all([doneWindow, doneWorker])
 })

@@ -11,7 +11,9 @@ import {
   Subject,
   lastValueFrom,
 } from 'rxjs'
-import { Message, MessageToSend, Msg, Receiver, SynAck, SynAckMessage, UserMessage } from './adapters.js'
+
+import type { Message, MessageToSend, Receiver, SynAckMessage, UserMessage } from './adapters.js'
+import { Msg, SynAck } from './adapters.js'
 
 type MessageEvent<T = unknown> = globalThis.MessageEvent<T> | ExtendableMessageEvent
 
@@ -59,9 +61,8 @@ class PostChannel<S extends MessageToSend = MessageToSend> {
   private static __generateId = () => {
     if (window) {
       return window.crypto.randomUUID()
-    } else {
-      return (require('crypto') as Crypto).randomUUID()
     }
+    return (require('crypto') as Crypto).randomUUID()
   }
   static utils = {
     isPostChannelMessage,
@@ -111,19 +112,24 @@ class PostChannel<S extends MessageToSend = MessageToSend> {
 
     this.__subscription.add(
       this.__user$
-        .subscribe(async (message) => {
-          const foreignInstance = await lastValueFrom(this.__okToWrite.pipe(take(1)))
-          if (message.instance === foreignInstance) {
-            this.__listener(message.content)
-            if (message._id !== undefined) {
-              // ============== ACK SEND ==================
-              /**
-               * when message is sent including an _id string
-               * it means a receipt acknowledgment is required
-               */
-              this.__receiver.postMessage({ content: message._id, instance: this.__instance, type: SynAck.Ack })
-            }
-          }
+        .subscribe((message) => {
+          lastValueFrom(this.__okToWrite.pipe(take(1)))
+            .then((foreignInstance) => {
+              if (message.instance === foreignInstance) {
+                this.__listener(message.content)
+                if (message._id !== undefined) {
+                // ============== ACK SEND ==================
+                /**
+                 * when message is sent including an _id string
+                 * it means a receipt acknowledgment is required
+                 */
+                  this.__receiver.postMessage({ content: message._id, instance: this.__instance, type: SynAck.Ack })
+                }
+              }
+            })
+            .catch((err: Error) => {
+              console.error('Unexpected error', err.message)
+            })
         })
     )
 
