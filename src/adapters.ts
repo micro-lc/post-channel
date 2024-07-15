@@ -27,9 +27,6 @@ interface SynAckMessage {
 
 type Message = SynAckMessage | UserMessage
 
-type MessageEventWithData<T = unknown> =
-  (Omit<globalThis.MessageEvent<T>, 'data'> | Omit<ExtendableMessageEvent, 'data'>) & {data: T & Message}
-
 // despite weird, the receiver has a postMessage method
 interface Receiver<T extends Message = Message> {
   postMessage: (message: T) => void

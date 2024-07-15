@@ -36,5 +36,5 @@ jobs:
       - name: Check Typescript Types
         run: yarn check:types
 
-      # - name: Linting
-      #   run: yarn lint
+      - name: Linting
+        run: yarn lint

@@ -62,6 +62,7 @@ class PostChannel<S extends MessageToSend = MessageToSend> {
     if (window) {
       return window.crypto.randomUUID()
     }
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
     return (require('crypto') as Crypto).randomUUID()
   }
   static utils = {
