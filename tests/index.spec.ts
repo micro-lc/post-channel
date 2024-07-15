@@ -37,7 +37,7 @@ test('window and child iframe should exchange messages after successful syn/ack'
   // starts channel on main window and awaits for
   // 1. a message from iframe
   // 2. a successful `ackSend`
-  await page.evaluate(async () => {
+  await page.evaluate(async (windowInstance) => {
     let promiseResolve: () => void
     const done = new Promise<void>((resolve) => {
       promiseResolve = resolve
@@ -49,11 +49,10 @@ test('window and child iframe should exchange messages after successful syn/ack'
     const {PostChannel: {createPostChannel, adapters}} = window
     const iframe = document.querySelector('iframe') as HTMLIFrameElement
     const {from, to} = adapters.fromParent(iframe)
-    const postChannel = await createPostChannel(listener, {from, to, instance: WINDOW_INSTANCE, log: console.log})
+    const postChannel = await createPostChannel(listener, {from, to, instance: windowInstance, log: console.log})
 
     await done
 
     await postChannel.ackSend({ type: 'hello' })
-  })
-
+  }, WINDOW_INSTANCE)
 })
