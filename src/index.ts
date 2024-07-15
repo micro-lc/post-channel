@@ -11,7 +11,7 @@ import {
   Subject,
   lastValueFrom,
 } from 'rxjs'
-import { Message, MessageToSend, Msg, Receiver, SynAck, SynAckMessage, UserMessage } from './adapters'
+import { Message, MessageToSend, Msg, Receiver, SynAck, SynAckMessage, UserMessage } from './adapters.js'
 
 type MessageEvent<T = unknown> = globalThis.MessageEvent<T> | ExtendableMessageEvent
 

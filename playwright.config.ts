@@ -16,30 +16,30 @@ const config: PlaywrightTestConfig = {
       },
     },
 
-    // {
-    //   name: 'firefox',
-    //   use: {
-    //     ...devices['Desktop Firefox'],
-    //     ignoreHTTPSErrors: true,
-    //     launchOptions: {
-    //       firefoxUserPrefs: {
-    //         'security.certerrors.mitm.auto_enable_enterprise_roots': true,
-    //         'security.enterprise_roots.enable': true,
-    //       },
-    //     },
-    //   },
-    // },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        ignoreHTTPSErrors: true,
+        launchOptions: {
+          firefoxUserPrefs: {
+            'security.certerrors.mitm.auto_enable_enterprise_roots': true,
+            'security.enterprise_roots.enable': true,
+          },
+        },
+      },
+    },
 
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari'],
-    //   },
-    // },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+      },
+    },
   ],
   reporter: process.env.CI ? 'html' : 'line',
   retries: process.env.CI ? 2 : 0,
-  testDir: './e2e',
+  testDir: './tests',
   timeout: 30 * 1000,
   use: {
     actionTimeout: 0,

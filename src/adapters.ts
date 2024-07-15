@@ -1,6 +1,3 @@
-import type EventEmitter from 'events'
-import type { Worker } from 'worker_threads'
-
 enum Msg {
   Msg = 'msg'
 }
