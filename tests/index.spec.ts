@@ -15,24 +15,24 @@ test('window and child iframe should exchange messages after successful syn/ack'
 
   // mounts an iframe which attempts to connect to
   // the parent window
-  await page.evaluate(async () => {
+  await page.evaluate(async (iframeInstance) => {
     const iframe = document.createElement('iframe')
     iframe.srcdoc = `
       <!DOCTYPE html>
       <html>
-        <head><title>${IFRAME_INSTANCE}</title></head>
+        <head><title>${iframeInstance}</title></head>
         <body>
           <script async type="module">
             import {createPostChannel, adapters} from "/src/index.ts"
             const {from, to} = adapters.fromChild(window)
-            const ch = await createPostChannel(() => {}, { from, to, instance: '${IFRAME_INSTANCE}', log: console.log })
+            const ch = await createPostChannel(() => {}, { from, to, instance: '${iframeInstance}', log: console.log })
             ch.send({ type: 'hello from iframe' })
           </script>
         </body>
       </html>
     `
     document.body.appendChild(iframe)
-  })
+  }, IFRAME_INSTANCE)
 
   // starts channel on main window and awaits for
   // 1. a message from iframe
