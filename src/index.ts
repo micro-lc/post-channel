@@ -57,6 +57,12 @@ const isPostChannelMessage = (message: MessageEvent): message is MessageEventWit
     && 'content' in data
 }
 
+const generateDarkColorHex = () => {
+  let color = '#'
+  for (let i = 0; i < 3; i++) { color += (`0${Math.floor(Math.random() * Math.pow(16, 2) / 2).toString(16)}`).slice(-2) }
+  return color
+}
+
 class PostChannel<S extends MessageToSend = MessageToSend> {
   private static __generateId = () => {
     if (window) {
@@ -80,6 +86,7 @@ class PostChannel<S extends MessageToSend = MessageToSend> {
   private __write$: Observable<string>
   private __synack$: Observable<SynAckMessage>
   private __user$: Observable<UserMessage>
+  private __colors: {bg: string; fg: string}
 
   private __connect(period: number) {
     /**
@@ -202,6 +209,12 @@ class PostChannel<S extends MessageToSend = MessageToSend> {
     this.__okToWrite = new ReplaySubject(1)
     this.__write$ = this.__okToWrite.pipe(take(1))
 
+    const color = generateDarkColorHex()
+    this.__colors = {
+      bg: `${color}22`,
+      fg: color,
+    }
+
     // period cannot be zero!
     this.__connect(
       opts?.period ? opts.period : 10
@@ -235,6 +248,10 @@ class PostChannel<S extends MessageToSend = MessageToSend> {
 
   get instance() {
     return this.__instance
+  }
+
+  get colors() {
+    return this.__colors
   }
 
   /**
