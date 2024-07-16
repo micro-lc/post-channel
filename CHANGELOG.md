@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+
+- Wrapped messages content
+- Separated SYN/ACK messages from user's messages
+
 ### Versioning
 
 - Dev dependencies updated
