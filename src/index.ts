@@ -251,6 +251,7 @@ export type {
   Message,
   MessageToSend,
   MessageEventWithData,
+  PostChannel,
   PostChannelOptions,
   Receiver,
   Sender,
