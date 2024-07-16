@@ -1,6 +1,6 @@
 {
   "name": "@micro-lc/post-channel",
-  "version": "0.2.0-rc0",
+  "version": "0.2.0-rc1",
   "type": "module",
   "main": "dist/cjs/index.cjs",
   "module": "dist/es/index.js",
