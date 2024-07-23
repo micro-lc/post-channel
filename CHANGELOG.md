@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [0.2.0] - 2024-07-23
+
 ### Changed
 
 - Wrapped messages content
