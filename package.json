@@ -33,7 +33,7 @@
   "devDependencies": {
     "@playwright/test": "^1.45.3",
     "@types/mocha": "^10.0.7",
-    "@types/node": "^22.0.2",
+    "@types/node": "^22.7.4",
     "c8": "^10.1.2",
     "commander": "^12.1.0",
     "confusing-browser-globals": "^1.0.11",
